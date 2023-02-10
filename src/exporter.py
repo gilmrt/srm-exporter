@@ -445,7 +445,7 @@ def updateResults():
 @app.route("/")
 def mainPage():
     return (
-        "<h1>Welcome to Speedtest-Exporter.</h1>"
+        "<h1>Welcome to SRM-Exporter.</h1>"
         + "Click <a href='/metrics'>here</a> to see metrics."
     )
 
