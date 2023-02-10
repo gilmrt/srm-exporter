@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/gilmrt/srm-exporter/compare/1.0.0...1.0.1) (2023-02-10)
+
+
+### Bug Fixes
+
+* enable test using local port ([77fea2e](https://github.com/gilmrt/srm-exporter/commit/77fea2ed73e3fdffc675e7359ee1c451f23f3443))
+
 ## 1.0.0 (2023-02-10)
 
 
