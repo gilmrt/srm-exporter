@@ -3,6 +3,13 @@
 
 ### Features
 
+* initial commit ([276f2f8](https://github.com/gilmrt/srm-exporter/commit/276f2f8c47c47ab82a584490c490ecad05fc4e97))
+
+## 1.0.0 (2023-02-10)
+
+
+### Features
+
 * add release ([#2](https://github.com/gilmrt/srm-exporter/issues/2)) ([e312946](https://github.com/gilmrt/srm-exporter/commit/e31294606f0cb61c9e7d380832e229d66b3535d0))
 * inital commit ([f6e965e](https://github.com/gilmrt/srm-exporter/commit/f6e965e200470f7c6e93a9d2d6e49dedc5903637))
 
