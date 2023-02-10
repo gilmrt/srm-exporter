@@ -1,0 +1,67 @@
+name: Docker
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  TEST_TAG: ${{ github.sha }}
+
+permissions:
+  security-events: write
+  # issues: write
+  # pull-requests: write
+
+jobs:
+
+  docker:
+    name: Docker
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
+
+      # - name: Test
+      #   run: |
+      #     docker run --rm --name test ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
+      #     wget --no-verbose --tries=1 --spider http://localhost:9922
+
+      - name: Run Trivy for to GitHub Security
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
+          format: sarif
+          cache-dir: /tmp/trivy
+          output: trivy-results.sarif
+          exit-code: "0"
+          severity: "CRITICAL,HIGH"
+
+      - name: Upload Trivy scan results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
+          format: table
+          cache-dir: /tmp/trivy
+          exit-code: "1"
+          severity: "CRITICAL,HIGH"
