@@ -1,7 +1,21 @@
 # srm-exporter
 
-## Description
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![GitHub release](https://img.shields.io/github/release/gilmrt/srm-exporter.svg)](https://github.com/gilmrt/srm-exporter/releases/latest)
+[![Build status](https://github.com/gilmrt/srm-exporter/workflows/Docker/badge.svg)](https://github.com/gilmrt/srm-exporter/actions?query=workflow%3ADocker)
+[![GitHub all releases](https://img.shields.io/github/downloads/gilmrt/srm-exporter/total?label=Release%20downloads)](https://github.com/gilmrt/srm-exporter/releases)
 
+## Description
+Pormetheus exporter for Synology SRM (Synology Router Manager).
+
+## Key features
+
+- get WAN status
+- get network utilization
+- get devices with status, IP, etc...
+- get Wi-Fi devices with link quality, signal strength, max rate, band used, etc...
+- get devices traffic usage
+- get mesh nodes with status, connected devices, etc...
 
 ## Exporter Web UI
 
@@ -84,8 +98,61 @@ Real example where the tests will be done every hour:
     - targets: ['srm-exporter:9922']
 ```
 ## Metrics outputs
-| Name | Description | Type | Default |
-| ---- | ---- | ---- | ---- |
+| Name | Description | Labels |
+| ---- | ---- | ---- |
+| srm_device_download_bytes | SRM device current download speed in Bytes/s | `period`, `mac`, `hostname` |
+| srm_device_upload_bytes | SRM device current upload speed in Bytes/s | `period`, `mac`, `hostname` |
+| srm_device_download_packets | SRM device current downloaded packets | `period`, `mac`, `hostname` |
+| srm_device_upload_packets | SRM device current upload packets | `period`, `mac`, `hostname` |
+| srm_total_download_bytes | SRM current total download bytes | `period` |
+| srm_total_upload_bytes | SRM current total upload bytes | `period` |
+| srm_device_current_rate | SRM device coonection rate | `mac`, `hostname` |
+| srm_device_is_online | SRM device online status | `mac`, `hostname`, `connection`, `ip6_addr`, `ip_addr` |
+| srm_device_is_wireless | SRM device wireless type | `mac`, `hostname`, `band`, `ip6_addr`, `ip_addr`, `rate_quality`, `wifi_ssid`|
+| srm_device_signalstrength | SRM device signal strenght | `mac`, `hostname` |
+| srm_device_transferRXRate | SRM device RX transfert rate | `mac`, `hostname` |
+| srm_device_transferTXRate | SRM device TX transfert rate | `mac`, `hostname` |
+| srm_system_load | SRM System current load |  |
+| srm_disk_total_utilization | SRM Disk utilization total |  |
+| srm_memory_size | SRM System memory size on KB |  |
+| srm_avail_real | SRM System real memory availible |  |
+| srm_avail_swap | SRM System swap available |  |
+| srm_buffer | SRM System buffer memory |  |
+| srm_cached | SRM System cached memory |  |
+| srm_real_usage | SRM System real memeory usage |  |
+| srm_swap_usage | SRM System swap memory usage |  |
+| srm_total_real | SRM System total memory real |  |
+| srm_total_swap | SRM System total swap |  |
+| srm_network_rx_total | SRM System Network total received |  |
+| srm_network_tx_total | SRM System Network total sent |  |
 
 ## Grafana Dashboard
 Under construction
+
+## Versioning
+
+This library is maintained under the [semantic versioning](https://semver.org/) guidelines.
+
+See the [releases](https://github.com/gilmrt/srm-exporter/releases) on this repository for changelog.
+
+## Changelog
+
+See [CHANGELOG file](CHANGELOG.md)
+
+## Contributing
+
+If you have a suggestion, please submit a [feature request](https://github.com/gilmrt/srm-exporter/issues/new?labels=enhancement).
+Pull requests are welcomed.
+
+## Credits
+
+**Gilles Martin**
+
+* [github/gilmrt](https://github.com/gilmrt)
+
+See also the list of [contributors](https://github.com/gilmrt/srm-exporter/contributors) to this project.
+
+### License
+Copyright © 2023, Gilles Martin.
+
+MIT

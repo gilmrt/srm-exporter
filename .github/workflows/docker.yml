@@ -34,13 +34,22 @@ jobs:
           context: .
           file: ./Dockerfile
           load: true
+          push: false
           tags: ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
 
-      # - name: Test
-      #   run: |
-      #     docker run --rm --name test ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
-      #     wget --no-verbose --tries=1 --spider http://localhost:9922
-
+      - name: Test
+        run: |
+          # Docker exporter test
+          docker run -d --rm --name test -p 9922:9922 ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
+          sleep 5
+          REQ_RETURN_CODE=$(curl "http://localhost:9922" -s -o /dev/null -w "%{http_code}")
+          if [[ "${REQ_RETURN_CODE}" == "200" ]]; then 
+            echo "Success : request received by exporter, get return code 200"
+          else
+            echo "Failure : receive return code ${REQ_RETURN_CODE}"
+            exit 1
+          fi
+          
       - name: Run Trivy for to GitHub Security
         uses: aquasecurity/trivy-action@master
         with:
