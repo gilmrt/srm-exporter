@@ -407,7 +407,7 @@ def updateResults():
 
     if datetime.datetime.now() > cache_until:
         # SRM Authentication
-        host, client = srm_auth()
+        client = srm_auth()
 
         # SRM system info
         system_infos = get_system_info(client)
