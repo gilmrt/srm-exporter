@@ -1,9 +1,14 @@
+---
+
 name: Linter
 
 on:
   pull_request:
     branches:
       - main
+
+permissions:
+  statuses: write
 
 jobs:
   lint-code:
@@ -48,4 +53,8 @@ jobs:
           echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
 
       - name: Validate all commits from PR
-        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+        run: |
+          npx commitlint \
+            --from ${{ github.event.pull_request.base.sha }} \
+            --to ${{ github.event.pull_request.head.sha }} \
+            --verbose

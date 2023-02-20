@@ -1,3 +1,5 @@
+---
+
 name: Docker
 
 on:
@@ -40,7 +42,12 @@ jobs:
       - name: Test
         run: |
           # Docker exporter test
-          docker run -d --rm --name test -p 9922:9922 ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
+          docker run \
+            -d \
+            --rm \
+            --name test \
+            -p 9922:9922 \
+            ${{ env.IMAGE_NAME }}:${{ env.TEST_TAG }}
           sleep 5
           REQ_RETURN_CODE=$(curl "http://localhost:9922" -s -o /dev/null -w "%{http_code}")
           if [[ "${REQ_RETURN_CODE}" == "200" ]]; then 
