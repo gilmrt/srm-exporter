@@ -407,7 +407,7 @@ def updateResults():
 
     if datetime.datetime.now() > cache_until:
         # SRM Authentication
-        host, client = srm_auth()
+        client = srm_auth()
 
         # SRM system info
         system_infos = get_system_info(client)
@@ -435,6 +435,7 @@ def updateResults():
                 host=HOST, mac=metric["mac"], hostname=metric["hostname"]
             ).set(metric["current_rate"])
             device_is_online.labels(
+                host=HOST,
                 connection=metric["connection"],
                 hostname=metric["hostname"],
                 ip6_addr=metric["ip6_addr"],
