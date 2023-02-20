@@ -5,6 +5,13 @@
 
 * add missing host label ([0ec90ac](https://github.com/gilmrt/srm-exporter/commit/0ec90aca9b3eeb4450c8296df2c7185d0a20831f))
 
+## [1.1.1](https://github.com/gilmrt/srm-exporter/compare/1.1.0...1.1.1) (2023-02-20)
+
+
+### Bug Fixes
+
+* add missing host label ([0ec90ac](https://github.com/gilmrt/srm-exporter/commit/0ec90aca9b3eeb4450c8296df2c7185d0a20831f))
+
 ## [1.1.0](https://github.com/gilmrt/srm-exporter/compare/1.0.1...1.1.0) (2023-02-20)
 
 
