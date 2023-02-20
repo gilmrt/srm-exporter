@@ -100,6 +100,25 @@ device_transferTXRate = Gauge(
     ["mac", "hostname"],
 )
 
+srm_system_info = Gauge(
+    "srm_system_info",
+    "SRM System Informations",
+    [
+        "cpu_clock_speed",
+        "cpu_cores",
+        "cpu_series",
+        "cpu_vendor",
+        "enabled_ntp",
+        "firmware_date",
+        "firmware_ver",
+        "model",
+        "ntp_server",
+        "ram_size",
+        "serial",
+        "up_time",
+    ],
+)
+
 srm_system_load = Gauge("srm_system_load", "SRM System current load")
 srm_disk_total_utilization = Gauge(
     "srm_disk_total_utilization", "SRM Disk utilization total"
@@ -161,6 +180,51 @@ def srm_auth():
         client.http.disable_https_verify()
 
     return client
+
+
+def get_system_info(client):
+    system_info = client.http.call(
+        endpoint="entry.cgi",
+        api="SYNO.Core.System",
+        method="info",
+        version=1,
+    )
+
+    current_info = {}
+    system_infos = []
+
+    # Assign system details
+    cpu_clock_speed = system_info["cpu_clock_speed"]
+    cpu_cores = system_info["cpu_cores"]
+    cpu_family = system_info["cpu_family"]
+    cpu_series = system_info["cpu_series"]
+    cpu_vendor = system_info["cpu_vendor"]
+    enabled_ntp = system_info["enabled_ntp"]
+    firmware_date = system_info["firmware_date"]
+    firmware_ver = system_info["firmware_ver"]
+    model = system_info["model"]
+    ntp_server = system_info["ntp_server"]
+    ram_size = system_info["ram_size"]
+    serial = system_info["serial"]
+    up_time = system_info["up_time"]
+    current_info = {
+        "cpu_clock_speed": cpu_clock_speed,
+        "cpu_cores": cpu_cores,
+        "cpu_family": cpu_family,
+        "cpu_series": cpu_series,
+        "cpu_vendor": cpu_vendor,
+        "enabled_ntp": enabled_ntp,
+        "firmware_date": firmware_date,
+        "firmware_ver": firmware_ver,
+        "model": model,
+        "ntp_server": ntp_server,
+        "ram_size": ram_size,
+        "serial": serial,
+        "up_time": up_time,
+    }
+    system_infos.append(current_info)
+
+    return system_infos
 
 
 def get_srm_devices(client):
@@ -322,6 +386,24 @@ def updateResults():
     if datetime.datetime.now() > cache_until:
         # SRM Authentication
         client = srm_auth()
+
+        # SRM system info
+        system_infos = get_system_info(client)
+        for info in system_infos:
+            srm_system_info.labels(
+                cpu_clock_speed=info["cpu_clock_speed"],
+                cpu_cores=info["cpu_cores"],
+                cpu_series=info["cpu_series"],
+                cpu_vendor=info["cpu_vendor"],
+                enabled_ntp=info["enabled_ntp"],
+                firmware_date=info["firmware_date"],
+                firmware_ver=info["firmware_ver"],
+                model=info["model"],
+                ntp_server=info["ntp_server"],
+                ram_size=info["ram_size"],
+                serial=info["serial"],
+                up_time=info["up_time"],
+            ).set(1)
 
         # SRM device connections type
         device_connections, mac_to_hostname, mac_to_ip_addr = get_srm_devices(client)
