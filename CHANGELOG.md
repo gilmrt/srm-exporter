@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/gilmrt/srm-exporter/compare/1.0.1...1.1.0) (2023-02-20)
+
+
+### Features
+
+* add system info ([f4f702a](https://github.com/gilmrt/srm-exporter/commit/f4f702ae791098208661d54a8d257c3f3fe86f07))
+
 ## [1.0.1](https://github.com/gilmrt/srm-exporter/compare/1.0.0...1.0.1) (2023-02-10)
 
 
