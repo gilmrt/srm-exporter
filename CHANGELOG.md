@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/gilmrt/srm-exporter/compare/1.1.1...1.1.2) (2023-02-20)
+
+
+### Bug Fixes
+
+* incorrect return ([6c536f5](https://github.com/gilmrt/srm-exporter/commit/6c536f50522d922fa5f8723b23c90526745eb1af))
+
 ## [1.1.1](https://github.com/gilmrt/srm-exporter/compare/1.1.0...1.1.1) (2023-02-20)
 
 
