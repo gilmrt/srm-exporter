@@ -31,79 +31,89 @@ cache_until = datetime.datetime.fromtimestamp(0)
 device_download_bytes = Gauge(
     "srm_device_download_bytes",
     "SRM device current download speed in Bytes/s",
-    ["period", "mac", "hostname"],
+    ["host", "period", "mac", "hostname"],
 )
 device_upload_bytes = Gauge(
     "srm_device_upload_bytes",
     "SRM device current upload speed in Bytes/s",
-    ["period", "mac", "hostname"],
+    ["host", "period", "mac", "hostname"],
 )
 device_download_packets = Gauge(
     "srm_device_download_packets",
     "SRM device current downloaded packets",
-    ["period", "mac", "hostname"],
+    ["host", "period", "mac", "hostname"],
 )
 device_upload_packets = Gauge(
     "srm_device_upload_packets",
     "SRM device current upload packets",
-    ["period", "mac", "hostname"],
+    ["host", "period", "mac", "hostname"],
 )
 srm_total_download_bytes = Gauge(
     "srm_total_download_bytes",
     "SRM current total download bytes",
-    ["period"],
+    ["host", "period"],
 )
 srm_total_upload_bytes = Gauge(
     "srm_total_upload_bytes",
     "SRM current total upload bytes",
-    ["period"],
+    ["host", "period"],
 )
 # srm_total_download_packets = Gauge(
 #     "srm_total_download_packets",
 #   "SRM current total download packets",
-#   ["period", "device", "hostname"],
+#   ["host", "period", "device", "hostname"],
 # )
 # srm_total_upload_packets = Gauge(
 #   "srm_total_upload_packets",
 #   "SRM current total upload packets",
-#   ["period", "device", "hostname"],
+#   ["host", "period", "device", "hostname"],
 # )
 
 device_current_rate = Gauge(
     "srm_device_current_rate",
     "SRM device coonection rate",
-    ["mac", "hostname"],
+    ["host", "mac", "hostname"],
 )
 device_is_online = Gauge(
     "srm_device_is_online",
     "SRM device online status",
-    ["mac", "hostname", "connection", "ip6_addr", "ip_addr"],
+    ["host", "mac", "hostname", "connection", "ip6_addr", "ip_addr"],
 )
 device_is_wireless = Gauge(
     "srm_device_is_wireless",
     "SRM device wireless type",
-    ["mac", "hostname", "band", "ip6_addr", "ip_addr", "rate_quality", "wifi_ssid"],
+    [
+        "host",
+        "mac",
+        "hostname",
+        "band",
+        "ip6_addr",
+        "ip_addr",
+        "rate_quality",
+        "wifi_ssid",
+    ],
 )
 device_signalstrength = Gauge(
     "srm_device_signalstrength",
     "SRM device signal strenght",
-    ["mac", "hostname"],
+    ["host", "mac", "hostname"],
 )
 device_transferRXRate = Gauge(
     "srm_device_transferRXRate",
     "SRM device RX transfert rate",
-    ["mac", "hostname"],
+    ["host", "mac", "hostname"],
 )
 device_transferTXRate = Gauge(
     "srm_device_transferTXRate",
     "SRM device TX transfert rate",
-    ["mac", "hostname"],
+    ["host", "mac", "hostname"],
 )
 
 srm_system_info = Gauge(
     "srm_system_info",
     "SRM System Informations",
     [
+        "host",
         "cpu_clock_speed",
         "cpu_cores",
         "cpu_series",
@@ -119,23 +129,35 @@ srm_system_info = Gauge(
     ],
 )
 
-srm_system_load = Gauge("srm_system_load", "SRM System current load")
+srm_system_load = Gauge("srm_system_load", "SRM System current load", ["host"])
 srm_disk_total_utilization = Gauge(
-    "srm_disk_total_utilization", "SRM Disk utilization total"
+    "srm_disk_total_utilization", "SRM Disk utilization total", ["host"]
 )
-srm_memory_size = Gauge("srm_memory_size", "SRM System memory size on KB")
-srm_memory_avail_real = Gauge("srm_avail_real", "SRM System real memory availible")
-srm_memory_avail_swap = Gauge("srm_avail_swap", "SRM System swap available")
-srm_memory_buffer = Gauge("srm_buffer", "SRM System buffer memory")
-srm_memory_cached = Gauge("srm_cached", "SRM System cached memory")
-srm_memory_real_usage = Gauge("srm_real_usage", "SRM System real memeory usage")
-srm_memory_swap_usage = Gauge("srm_swap_usage", "SRM System swap memory usage")
-srm_memory_total_real = Gauge("srm_total_real", "SRM System total memory real")
-srm_memory_total_swap = Gauge("srm_total_swap", "SRM System total swap")
+srm_memory_size = Gauge("srm_memory_size", "SRM System memory size on KB", ["host"])
+srm_memory_avail_real = Gauge(
+    "srm_avail_real", "SRM System real memory availible", ["host"]
+)
+srm_memory_avail_swap = Gauge("srm_avail_swap", "SRM System swap available", ["host"])
+srm_memory_buffer = Gauge("srm_buffer", "SRM System buffer memory", ["host"])
+srm_memory_cached = Gauge("srm_cached", "SRM System cached memory", ["host"])
+srm_memory_real_usage = Gauge(
+    "srm_real_usage", "SRM System real memeory usage", ["host"]
+)
+srm_memory_swap_usage = Gauge(
+    "srm_swap_usage", "SRM System swap memory usage", ["host"]
+)
+srm_memory_total_real = Gauge(
+    "srm_total_real", "SRM System total memory real", ["host"]
+)
+srm_memory_total_swap = Gauge("srm_total_swap", "SRM System total swap", ["host"])
 srm_network_rx_total = Gauge(
-    "srm_network_rx_total", "SRM System Network total received"
+    "srm_network_rx_total", "SRM System Network total received", ["host"]
 )
-srm_network_tx_total = Gauge("srm_network_tx_total", "SRM System Network total sent")
+srm_network_tx_total = Gauge(
+    "srm_network_tx_total", "SRM System Network total sent", ["host"]
+)
+
+HOST = str(os.environ.get("SRM_HOST", "192.168.1.1"))
 
 
 def humansize(nbytes):
@@ -167,7 +189,7 @@ def bits_to_megabits(bits_per_sec):
 
 def srm_auth():
     client = synology_srm.Client(
-        host=os.environ.get("SRM_HOST", "192.168.1.1"),
+        host=HOST,
         port=os.environ.get("SRM_PORT", "8001"),
         https=stringToBool(os.environ.get("USE_HTTPS", True)),
         username=os.environ.get("SRM_USERNAME", "admin"),
@@ -385,12 +407,13 @@ def updateResults():
 
     if datetime.datetime.now() > cache_until:
         # SRM Authentication
-        client = srm_auth()
+        host, client = srm_auth()
 
         # SRM system info
         system_infos = get_system_info(client)
         for info in system_infos:
             srm_system_info.labels(
+                host=HOST,
                 cpu_clock_speed=info["cpu_clock_speed"],
                 cpu_cores=info["cpu_cores"],
                 cpu_series=info["cpu_series"],
@@ -409,7 +432,7 @@ def updateResults():
         device_connections, mac_to_hostname, mac_to_ip_addr = get_srm_devices(client)
         for metric in device_connections:
             device_current_rate.labels(
-                mac=metric["mac"], hostname=metric["hostname"]
+                host=HOST, mac=metric["mac"], hostname=metric["hostname"]
             ).set(metric["current_rate"])
             device_is_online.labels(
                 connection=metric["connection"],
@@ -419,6 +442,7 @@ def updateResults():
                 mac=metric["mac"],
             ).set(metric["is_online"])
             device_is_wireless.labels(
+                host=HOST,
                 mac=metric["mac"],
                 hostname=metric["hostname"],
                 band=metric["band"],
@@ -428,30 +452,30 @@ def updateResults():
                 wifi_ssid=metric["wifi_ssid"],
             ).set(metric["is_wireless"])
             device_signalstrength.labels(
-                mac=metric["mac"], hostname=metric["hostname"]
+                host=HOST, mac=metric["mac"], hostname=metric["hostname"]
             ).set(metric["signalstrength"])
             device_transferRXRate.labels(
-                mac=metric["mac"], hostname=metric["hostname"]
+                host=HOST, mac=metric["mac"], hostname=metric["hostname"]
             ).set(metric["transferRXRate"])
             device_transferTXRate.labels(
-                mac=metric["mac"], hostname=metric["hostname"]
+                host=HOST, mac=metric["mac"], hostname=metric["hostname"]
             ).set(metric["transferTXRate"])
 
         # SRM system utilization
         system_stats = get_system_stats(client)
         for metric in system_stats:
-            srm_system_load.set(metric["cpu_load"])
-            srm_memory_size.set(metric["memory_size"])
-            srm_memory_avail_real.set(metric["memory_avail_real"])
-            srm_memory_avail_swap.set(metric["memory_avail_swap"])
-            srm_memory_buffer.set(metric["memory_buffer"])
-            srm_memory_cached.set(metric["memory_cached"])
-            srm_memory_real_usage.set(metric["memory_real_usage"])
-            srm_memory_swap_usage.set(metric["memory_swap_usage"])
-            srm_memory_total_real.set(metric["memory_total_real"])
-            srm_memory_total_swap.set(metric["memory_total_swap"])
-            srm_network_rx_total.set(metric["network_rx_total"])
-            srm_network_tx_total.set(metric["network_tx_total"])
+            srm_system_load.labels(host=HOST).set(metric["cpu_load"])
+            srm_memory_size.labels(host=HOST).set(metric["memory_size"])
+            srm_memory_avail_real.labels(host=HOST).set(metric["memory_avail_real"])
+            srm_memory_avail_swap.labels(host=HOST).set(metric["memory_avail_swap"])
+            srm_memory_buffer.labels(host=HOST).set(metric["memory_buffer"])
+            srm_memory_cached.labels(host=HOST).set(metric["memory_cached"])
+            srm_memory_real_usage.labels(host=HOST).set(metric["memory_real_usage"])
+            srm_memory_swap_usage.labels(host=HOST).set(metric["memory_swap_usage"])
+            srm_memory_total_real.labels(host=HOST).set(metric["memory_total_real"])
+            srm_memory_total_swap.labels(host=HOST).set(metric["memory_total_swap"])
+            srm_network_rx_total.labels(host=HOST).set(metric["network_rx_total"])
+            srm_network_tx_total.labels(host=HOST).set(metric["network_tx_total"])
 
         # SRM device traffic
         periods = ["live", "day", "week", "month"]
@@ -465,19 +489,35 @@ def updateResults():
             ) = get_traffic_stats(client, mac_to_hostname, mac_to_ip_addr, period)
             for metric in device_traffics:
                 device_download_bytes.labels(
-                    period=period, mac=metric["mac"], hostname=metric["hostname"]
+                    host=HOST,
+                    period=period,
+                    mac=metric["mac"],
+                    hostname=metric["hostname"],
                 ).set(metric["downloadBytes"])
                 device_download_packets.labels(
-                    period=period, mac=metric["mac"], hostname=metric["hostname"]
+                    host=HOST,
+                    period=period,
+                    mac=metric["mac"],
+                    hostname=metric["hostname"],
                 ).set(metric["downloadPackets"])
                 device_upload_bytes.labels(
-                    period=period, mac=metric["mac"], hostname=metric["hostname"]
+                    host=HOST,
+                    period=period,
+                    mac=metric["mac"],
+                    hostname=metric["hostname"],
                 ).set(metric["uploadBytes"])
                 device_upload_packets.labels(
-                    period=period, mac=metric["mac"], hostname=metric["hostname"]
+                    host=HOST,
+                    period=period,
+                    mac=metric["mac"],
+                    hostname=metric["hostname"],
                 ).set(metric["uploadPackets"])
-                srm_total_download_bytes.labels(period=period).set(totalDownloadBytes)
-                srm_total_upload_bytes.labels(period=period).set(totalUploadBytes)
+                srm_total_download_bytes.labels(host=HOST, period=period).set(
+                    totalDownloadBytes
+                )
+                srm_total_upload_bytes.labels(host=HOST, period=period).set(
+                    totalUploadBytes
+                )
 
                 logging.debug(
                     str(metric["hostname"])
