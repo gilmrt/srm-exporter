@@ -1,3 +1,11 @@
+## [1.2.0](https://github.com/gilmrt/srm-exporter/compare/1.1.2...1.2.0) (2023-11-01)
+
+
+### Features
+
+* update to python 3.12.0 ([#7](https://github.com/gilmrt/srm-exporter/issues/7)) ([af975f3](https://github.com/gilmrt/srm-exporter/commit/af975f33514639ba1e0a42835a259fa05818375d))
+* add PERIODS environment variable ([#7](https://github.com/gilmrt/srm-exporter/issues/7)) ([af975f3](https://github.com/gilmrt/srm-exporter/commit/af975f33514639ba1e0a42835a259fa05818375d))
+
 ## [1.1.2](https://github.com/gilmrt/srm-exporter/compare/1.1.1...1.1.2) (2023-02-20)
 
 
