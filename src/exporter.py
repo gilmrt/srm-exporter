@@ -191,13 +191,13 @@ def srm_auth():
     client = synology_srm.Client(
         host=HOST,
         port=os.environ.get("SRM_PORT", "8001"),
-        https=stringToBool(os.environ.get("USE_HTTPS", True)),
+        https=stringToBool(os.environ.get("USE_HTTPS", "True")),
         username=os.environ.get("SRM_USERNAME", "admin"),
         password=os.environ.get("SRM_PASSWORD"),
     )
 
     # HTTPS usage
-    disable_https_verify = stringToBool(os.environ.get("DISABLE_HTTPS_VERIFY", False))
+    disable_https_verify = stringToBool(os.environ.get("DISABLE_HTTPS_VERIFY", "False"))
     if disable_https_verify:
         client.http.disable_https_verify()
 
@@ -479,7 +479,8 @@ def updateResults():
             srm_network_tx_total.labels(host=HOST).set(metric["network_tx_total"])
 
         # SRM device traffic
-        periods = ["live", "day", "week", "month"]
+        periods = [p.strip() for p in os.environ.get("PERIODS", "live").split(",")]
+        # periods = ["live", "day", "week", "month"]
         for period in periods:
             (
                 device_traffics,

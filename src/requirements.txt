@@ -1,4 +1,4 @@
 synology-srm==0.2.3
-Flask==2.2.2
-prometheus-client==0.16.0
+Flask==3.0.0
+prometheus-client==0.18.0
 waitress==2.1.2
