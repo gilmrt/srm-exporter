@@ -100,7 +100,9 @@ Real example where the tests will be done every 30s:
   static_configs:
     - targets: ['srm-exporter:9922']
 ```
+
 ## Metrics outputs
+
 | Name | Description | Labels |
 | ---- | ---- | ---- |
 | srm_device_download_bytes | SRM device current download speed in Bytes/s | `period`, `mac`, `hostname` |
@@ -130,7 +132,12 @@ Real example where the tests will be done every 30s:
 | srm_network_tx_total | SRM System Network total sent |  |
 
 ## Grafana Dashboard
+
 Under construction
+
+## Known Issues
+
+Periods `month` seems not working on RT2600AC (see [comment](https://github.com/gilmrt/srm-exporter/issues/6#issuecomment-1789226784))
 
 ## Versioning
 
