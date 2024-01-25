@@ -23,6 +23,8 @@ Access the webui at `http://<your-ip>:9922`.
 
 ## Usage
 
+> You need to authenticate with an administrator account in order to get permissions needed for SRM API.
+
 ### docker-compose
 
 ```yaml
@@ -38,7 +40,7 @@ services:
       - SRM_PORT=8001
       - SRM_USERNAME=admin
       - SRM_PASSWORD=password
-      - PERIODS=live,day,week,month
+      - PERIODS=live
       - USE_HTTPS=True
       - DISABLE_HTTPS_VERIFY=False
       - EXPORTER_CACHE_FOR=0
@@ -57,7 +59,7 @@ docker run -d \
   -e SRM_PORT=8001 \
   -e SRM_USERNAME=admin \
   -e SRM_PASSWORD=password \
-  -e PERIODS=live,day,week,month \
+  -e PERIODS=live \
   -e USE_HTTPS=True \
   -e DISABLE_HTTPS_VERIFY=False \
   -e EXPORTER_CACHE_FOR=0 \
@@ -105,31 +107,33 @@ Real example where the tests will be done every 30s:
 
 | Name | Description | Labels |
 | ---- | ---- | ---- |
-| srm_device_download_bytes | SRM device current download speed in Bytes/s | `period`, `mac`, `hostname` |
-| srm_device_upload_bytes | SRM device current upload speed in Bytes/s | `period`, `mac`, `hostname` |
-| srm_device_download_packets | SRM device current downloaded packets | `period`, `mac`, `hostname` |
-| srm_device_upload_packets | SRM device current upload packets | `period`, `mac`, `hostname` |
-| srm_total_download_bytes | SRM current total download bytes | `period` |
-| srm_total_upload_bytes | SRM current total upload bytes | `period` |
-| srm_device_current_rate | SRM device coonection rate | `mac`, `hostname` |
-| srm_device_is_online | SRM device online status | `mac`, `hostname`, `connection`, `ip6_addr`, `ip_addr` |
-| srm_device_is_wireless | SRM device wireless type | `mac`, `hostname`, `band`, `ip6_addr`, `ip_addr`, `rate_quality`, `wifi_ssid`|
-| srm_device_signalstrength | SRM device signal strenght | `mac`, `hostname` |
-| srm_device_transferRXRate | SRM device RX transfert rate | `mac`, `hostname` |
-| srm_device_transferTXRate | SRM device TX transfert rate | `mac`, `hostname` |
-| srm_system_load | SRM System current load |  |
-| srm_disk_total_utilization | SRM Disk utilization total |  |
-| srm_memory_size | SRM System memory size on KB |  |
-| srm_avail_real | SRM System real memory availible |  |
-| srm_avail_swap | SRM System swap available |  |
-| srm_buffer | SRM System buffer memory |  |
-| srm_cached | SRM System cached memory |  |
-| srm_real_usage | SRM System real memeory usage |  |
-| srm_swap_usage | SRM System swap memory usage |  |
-| srm_total_real | SRM System total memory real |  |
-| srm_total_swap | SRM System total swap |  |
-| srm_network_rx_total | SRM System Network total received |  |
-| srm_network_tx_total | SRM System Network total sent |  |
+| device_download_bytes | SRM device current download speed in Bytes/s | `host`, `period`, `mac`, `hostname` |
+| device_upload_bytes | SRM device current upload speed in Bytes/s | `host`, `period`, `mac`, `hostname` |
+| device_download_packets | SRM device current downloaded packets | `host`, `period`, `mac`, `hostname` |
+| device_upload_packets | SRM device current upload packets | `host`, `period`, `mac`, `hostname` |
+| srm_total_download_bytes | SRM current total download bytes | `host`, `period` |
+| srm_total_upload_bytes | SRM current total upload bytes | `host`, `period` |
+| device_current_rate | SRM device coonection rate | `host`, `mac`, `hostname` |
+| device_is_online | SRM device online status | `host`, `mac`, `hostname`, `connection`, `ip6_addr`, `ip_addr` |
+| device_is_wireless | SRM device wireless type | `host`, `mac`, `hostname`, `band`, `ip6_addr`, `ip_addr`, `rate_quality`, `wifi_ssid`|
+| device_signalstrength | SRM device signal strenght | `host`, `mac`, `hostname` |
+| device_transferRXRate | SRM device RX transfert rate | `host`, `mac`, `hostname` |
+| device_transferTXRate | SRM device TX transfert rate | `host`, `mac`, `hostname` |
+| srm_system_info | SRM System informations | `host`, `cpu_clock_speed`, `cpu_cores`, `cpu_series`, `cpu_vendor`, `enabled_ntp`, `firmware_date`, `firmware_ver`, `model`, `ntp_server`, `ram_size`, `serial` |
+| srm_system_load | SRM System current load | `host` |
+| srm_system_up_time | SRM System up time | `host` |
+| srm_disk_total_utilization | SRM Disk utilization total | `host` |
+| srm_memory_size | SRM System memory size on KB | `host` |
+| srm_avail_real | SRM System real memory availible | `host` |
+| srm_avail_swap | SRM System swap available | `host` |
+| srm_buffer | SRM System buffer memory | `host` |
+| srm_cached | SRM System cached memory | `host` |
+| srm_real_usage | SRM System real memeory usage | `host` |
+| srm_swap_usage | SRM System swap memory usage | `host`|
+| srm_total_real | SRM System total memory real | `host` |
+| srm_total_swap | SRM System total swap | `host` |
+| srm_network_rx_total | SRM System Network total received | `host` |
+| srm_network_tx_total | SRM System Network total sent | `host` |
 
 ## Grafana Dashboard
 
@@ -137,7 +141,18 @@ Under construction
 
 ## Known Issues
 
+### Periods
+
 Periods `month` seems not working on RT2600AC (see [comment](https://github.com/gilmrt/srm-exporter/issues/6#issuecomment-1789226784))
+
+### Login failed / Permissions denied
+
+Permissions needed for the API are only available for administrator accounts.
+
+In SRM Control Panel > User, you may notice that an administrator account has a **little gold medal with a red ribbon** on the user icon (as does the default administrator account) which means that the account is part of the administrator group.
+If you're not using this primary default admin account, follow steps [here](https://kb.synology.com/en-id/SRM/tutorial/Create_multiple_administrator_accounts_on_Synology_Router) or [here](https://community.synology.com/enu/forum/2/post/127805) to create a new one with admin permissions.
+
+Another point concerns multi-factor authentication: even if you've disabled two-factor authentication, you still need to click on the administrator account and click on reset multi-factor authentication to disable it for a use that had already enabled it.
 
 ## Versioning
 

@@ -125,9 +125,9 @@ srm_system_info = Gauge(
         "ntp_server",
         "ram_size",
         "serial",
-        "up_time",
     ],
 )
+srm_system_up_time = Gauge("srm_system_up_time", "SRM System current up time", ["host"])
 
 srm_system_load = Gauge("srm_system_load", "SRM System current load", ["host"])
 srm_disk_total_utilization = Gauge(
@@ -176,6 +176,17 @@ def stringToBool(string: str) -> bool:
             return True
         case _:
             return False
+
+
+def stringToSecond(timestr: str) -> float:
+    """Get seconds from time.
+    :param timestr: hh:mm:ss.xxx string or mm:s.xxx or simply s.xxx where xxx is the fraction of seconds
+    :returns: time in float seconds
+    """
+    seconds = 0.0
+    for part in timestr.split(":"):
+        seconds = seconds * 60.0 + float(part)
+    return seconds
 
 
 def bytes_to_bits(bytes_per_sec):
@@ -250,7 +261,6 @@ def get_system_info(client):
 
 
 def get_srm_devices(client):
-
     # Get devices connections
     network_nsm_device = client.core.get_network_nsm_device()
 
@@ -260,7 +270,6 @@ def get_srm_devices(client):
     device_connections = []
 
     for device in network_nsm_device:
-
         # Translate Mac address to hostname
         mac_to_hostname[device["mac"].lower()] = device["hostname"]
         if device["hostname"] == "":
@@ -404,11 +413,7 @@ def get_traffic_stats(client, mac_to_hostname, mac_to_ip_addr, period="day"):
 @app.route("/metrics")
 def updateResults():
     global cache_until
-
     if datetime.datetime.now() > cache_until:
-        # SRM Authentication
-        client = srm_auth()
-
         # SRM system info
         system_infos = get_system_info(client)
         for info in system_infos:
@@ -425,8 +430,8 @@ def updateResults():
                 ntp_server=info["ntp_server"],
                 ram_size=info["ram_size"],
                 serial=info["serial"],
-                up_time=info["up_time"],
             ).set(1)
+            srm_system_up_time.labels(host=HOST).set(stringToSecond(info["up_time"]))
 
         # SRM device connections type
         device_connections, mac_to_hostname, mac_to_ip_addr = get_srm_devices(client)
@@ -480,7 +485,6 @@ def updateResults():
 
         # SRM device traffic
         periods = [p.strip() for p in os.environ.get("PERIODS", "live").split(",")]
-        # periods = ["live", "day", "week", "month"]
         for period in periods:
             (
                 device_traffics,
@@ -577,4 +581,13 @@ def mainPage():
 if __name__ == "__main__":
     PORT = os.environ.get("EXPORTER_PORT", 9922)
     logging.info("Starting Synology-SRM-Exporter on http://localhost:" + str(PORT))
+    # SRM Authentication
+    logging.info(
+        "Loging to "
+        + str(HOST)
+        + " using "
+        + str(os.environ.get("SRM_USERNAME", "admin"))
+        + "user"
+    )
+    client = srm_auth()
     serve(app, host="0.0.0.0", port=PORT)
