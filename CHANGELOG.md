@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/gilmrt/srm-exporter/compare/2.0.0...2.0.1) (2024-01-26)
+
+
+### Bug Fixes
+
+* update pyhton dependencies ([#11](https://github.com/gilmrt/srm-exporter/issues/11)) ([44dc738](https://github.com/gilmrt/srm-exporter/commit/44dc738a7097fdc9f901fef06ed4ad6982aefa4d))
+
 ## [2.0.0](https://github.com/gilmrt/srm-exporter/compare/1.2.0...2.0.0) (2024-01-24)
 
 ### BRAKING CHANGE: 
