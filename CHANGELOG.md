@@ -1,15 +1,11 @@
-## [1.2.0](https://github.com/gilmrt/srm-exporter/compare/1.1.2...1.2.0) (2024-01-25)
+## [2.0.0](https://github.com/gilmrt/srm-exporter/compare/1.2.0...2.0.0) (2024-01-24)
 
+### BRAKING CHANGE: 
+* replace up_time metric included in `srm_system_info` by dedicated `srm_system_up_time` metric
 
 ### Features
 
-* gauge for uptime and login on startup ([#10](https://github.com/gilmrt/srm-exporter/issues/10)) ([5d64213](https://github.com/gilmrt/srm-exporter/commit/5d64213b6dfa6e1e30fe840f6ef44ceadbd0a152))
-* update to python 3.12.0 ([#7](https://github.com/gilmrt/srm-exporter/issues/7)) ([af975f3](https://github.com/gilmrt/srm-exporter/commit/af975f33514639ba1e0a42835a259fa05818375d))
-
-
-### Documentation
-
-* add known issues to README ([#8](https://github.com/gilmrt/srm-exporter/issues/8)) ([f765df7](https://github.com/gilmrt/srm-exporter/commit/f765df78a5ba93dac68c7fa24148586c6f363a2f))
+* gauge for uptime and login on startup by ([#10](https://github.com/gilmrt/srm-exporter/issues/10)) ([5d64213](https://github.com/gilmrt/srm-exporter/commit/5d64213b6dfa6e1e30fe840f6ef44ceadbd0a152))
 
 ## [1.2.0](https://github.com/gilmrt/srm-exporter/compare/1.1.2...1.2.0) (2023-11-01)
 
